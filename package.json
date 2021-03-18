@@ -1,0 +1,15 @@
+{
+  "name": "limbot",
+  "version": "1.0.0",
+  "description": "QQ group management robot.",
+  "main": "limbot.js",
+  "scripts": {
+    "start": "node limbot.js"
+  },
+  "author": "blinking",
+  "license": "MIT",
+  "dependencies": {
+    "jsonfile": "^6.1.0",
+    "oicq": "^1.14.1"
+  }
+}
