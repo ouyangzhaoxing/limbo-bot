@@ -3,15 +3,23 @@
     "bot_id": "",
     "password": "",
     "listen": [],
+    "msg_no_check_level": 4,
     "function": {
         "join_tips": true,
         "banned_name": true,
         "banned_name_tips": true,
-        "banned_name_kick": true
+        "banned_name_kick": true,
+        "banned_message": true,
+        "banned_message_tips": true,
+        "banned_message_withdraw": true,
+        "banned_message_gag": true,
+        "banned_message_kick": true
     },
     "tipsTemplate": {
         "join": "[nickname] 请仔细阅读群规则，避免活不下去。",
         "banned_name_ban": "[nickname] 你的昵称已违规请，及时修改！",
-        "banned_name_kick": "[nickname] 你的昵称严重违规，已被移出群聊。"
+        "banned_name_kick": "[nickname] 你的昵称严重违规，已被移出群聊。",
+        "banned_message_ban": "[nickname] 你的消息违规，已禁言处理。",
+        "banned_message_kick": "[nickname] 你的消息严重违规，已被移出群聊。"
     }
 }
