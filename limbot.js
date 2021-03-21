@@ -33,6 +33,8 @@ jsonfile.readFile("./config.json", function (err, config) {
 
     if (!checkListen(data.group_id)) return;
 
+    answer(data);
+
     if (data.sender.level >= config.msg_no_check_level) return; // 忽略检查等级较高的成员
 
     checkMessage(data);
@@ -149,6 +151,38 @@ jsonfile.readFile("./config.json", function (err, config) {
       tips = tips.replace("[nickname]", "[CQ:at,qq=" + data.user_id + "]");
 
       if (config.function.banned_message_tips) bot.sendGroupMsg(data.group_id, tips); // 违规提示
+
+    });
+
+  }
+
+  /** 自动应答 */
+  function answer(data) {
+
+    if (!(data.message[data.message.length - 2].type === "at" &&
+      data.message[data.message.length - 2].data.qq == config.bot_id)) return;
+
+    if (data.message[data.message.length - 1].type !== "text") return;
+    let cmd = data.message[data.message.length - 1].data.text.split(" ").filter(c => c != "");
+
+    switch (cmd[0]) {
+      // 特殊命令
+      default: questionAnswer(data); break;
+    }
+
+  }
+
+  /** 问题回答 */
+  function questionAnswer(data) {
+
+    if (!config.function.question_answer) return;
+
+    let cmd = "SELECT VALUE FROM QUESTION_ANSWER WHERE KEY = $QUESTION;";
+    violationData.get(cmd, { $QUESTION: data.message[data.message.length - 1].data.text.trim() }, function (err, row) {
+
+      if (row === undefined) { bot.sendGroupMsg(data.group_id, config.tipsTemplate.no_answer); return; };
+
+      bot.sendGroupMsg(data.group_id, row.VALUE); // 回答问题
 
     });
 
