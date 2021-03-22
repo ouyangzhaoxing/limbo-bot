@@ -33,6 +33,8 @@ jsonfile.readFile("./config.json", function (err, config) {
 
     if (!checkListen(data.group_id)) return;
 
+    if (swordbearerInstruct(data)) return;
+
     answer(data);
 
     if (data.sender.level >= config.msg_no_check_level) return; // 忽略检查等级较高的成员
@@ -196,6 +198,35 @@ jsonfile.readFile("./config.json", function (err, config) {
       bot.sendGroupMsg(data.group_id, row.VALUE); // 回答问题
 
     });
+
+  }
+
+  /** 执剑者指令 */
+  function swordbearerInstruct(data) {
+
+    let checkFlag = true;
+
+    if (data.message[data.message.length - 1].type === "text" && isOwnerOrAdmin(data)
+      && data.message[data.message.length - 1].data.text.indexOf(config.bot_name) !== -1) {
+
+      if (data.message[data.message.length - 1].data.text.indexOf("击杀") !== -1) swordbearerKill(data);
+      else checkFlag = false;
+
+    } else checkFlag = false;
+
+    return checkFlag;
+
+  }
+
+  function swordbearerKill(data) {
+
+    try { // TODO 处理异常情况
+
+      bot.deleteMsg(data.message[0].data.id);
+      bot.setGroupKick(data.group_id, data.message[data.message.length - 2].data.qq, true);
+      bot.sendGroupMsg(data.group_id, config.tipsTemplate.answer_swordbearer);
+
+    } catch (error) { }
 
   }
 

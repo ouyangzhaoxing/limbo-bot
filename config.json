@@ -22,6 +22,7 @@
         "banned_name_kick": "[nickname] 你的昵称严重违规，已被移出群聊。",
         "banned_message_ban": "[nickname] 你的消息违规，已禁言处理。",
         "banned_message_kick": "[nickname] 你的消息严重违规，已被移出群聊。",
-        "no_answer": "没事请不要打扰我。"
+        "no_answer": "没事请不要打扰我。",
+        "answer_swordbearer": "好的执剑者，已完成你的指令。"
     }
 }
