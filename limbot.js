@@ -10,7 +10,7 @@ jsonfile.readFile("./config.json", function (err, config) {
 
   var violationData = new sqlite3.Database("./data.sqlite3"); // 打开数据库（违规数据）
 
-  var bot = createClient(config.bot_id, { log_level: "warn" });
+  var bot = createClient(config.bot_id, { log_level: "warn", brief: true, resend: true });
 
   bot.on("system.login.slider", () => {
     process.stdin.once("data", (input) => bot.sliderLogin(input)); // 滑动验证
