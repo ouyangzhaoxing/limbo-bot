@@ -3,7 +3,8 @@
     "bot_id": "",
     "password": "",
     "listen": [],
-    "msg_no_check_level": 4,
+    "msg_no_check_level": 5,
+    "no_kick_level": 3,
     "auto_talk_interval": 300000,
     "function": {
         "join_tips": true,

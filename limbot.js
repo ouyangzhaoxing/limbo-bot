@@ -142,6 +142,8 @@ jsonfile.readFile("./config.json", function (err, config) {
 
       let tips = "违规发言";
 
+      if (data.sender.level >= no_kick_level) violationValueCount = 5;
+
       if (violationValueCount === 5) { // 禁言
         tips = config.tipsTemplate.banned_message_ban;
         if (config.function.banned_message_gag) bot.setGroupBan(data.group_id, data.user_id, 300);
