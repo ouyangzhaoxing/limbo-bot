@@ -79,7 +79,7 @@ jsonfile.readFile("./config.json", function (err, config) {
     if (!config.function.banned_name) return;
 
     let cmd = "SELECT * FROM NAME_BAN_KEY WHERE INSTR($NAME, KEY) > 0;";
-    violationData.get(cmd, { $NAME: data.nickname }, function (err, row) {
+    violationData.get(cmd, { $NAME: data.nickname.toUpperCase() }, function (err, row) {
 
       if (row === undefined) return;
 
@@ -113,7 +113,7 @@ jsonfile.readFile("./config.json", function (err, config) {
     let violationKeys = {};
 
     let cmd = "SELECT * FROM MSG_BAN_KEY WHERE INSTR($MSG, KEY) > 0;";
-    violationData.each(cmd, { $MSG: data.raw_message }, function (err, row) {
+    violationData.each(cmd, { $MSG: data.raw_message.toUpperCase() }, function (err, row) {
 
       // 记录违规关键字
 
