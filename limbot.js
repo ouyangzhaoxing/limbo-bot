@@ -139,7 +139,9 @@ jsonfile.readFile("./config.json", function (err, config) {
       }
 
       if (violationValueCount < 5) return; // 未达到违规数值
-      if (data.sender.level >= config.no_kick_level) violationValueCount = 5; // 限制踢出群组等级
+
+      if ((data.sender.level >= config.no_kick_level && violationValueCount <= 8)
+        || data.sender.level == 6) violationValueCount = 5; // 限制踢出群组等级
 
       let tips = "违规发言";
       let cmd = "INSERT INTO VIOLATION_RECORDS VALUES ($USER_ID, $GROUP_ID, $TYPE, $REMARK, $TIME);";
