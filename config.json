@@ -5,9 +5,9 @@
     "listen": [],
     "msg_no_check_level": 6,
     "no_kick_level": 3,
-    "auto_talk_interval": 300000,
+    "auto_talk_interval": 600000,
     "function": {
-        "join_tips": true,
+        "join_tips": false,
         "banned_name": true,
         "banned_name_tips": true,
         "banned_name_kick": true,
@@ -17,7 +17,7 @@
         "banned_message_gag": true,
         "banned_message_kick": true,
         "question_answer": true,
-        "long_code_withdraw": true
+        "long_code_withdraw": false
     },
     "tipsTemplate": {
         "join": "[nickname] 请仔细阅读群规则，避免活不下去。",

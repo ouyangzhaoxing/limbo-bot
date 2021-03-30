@@ -25,7 +25,6 @@ jsonfile.readFile("./config.json", function (err, config) {
     if (!checkListen(data.group_id)) return;
 
     joinTips(data);
-
     checkNickname(data);
 
   });
@@ -36,7 +35,7 @@ jsonfile.readFile("./config.json", function (err, config) {
 
     if (swordbearerInstruct(data)) return;
 
-    if (longCodeWithdraw(data)) return;
+    // if (longCodeWithdraw(data)) return;
 
     answer(data);
 
@@ -93,7 +92,6 @@ jsonfile.readFile("./config.json", function (err, config) {
         else if (row.EXEC === "KICK") tips = config.tipsTemplate.banned_name_kick;
 
         tips = tips.replace("[nickname]", "[CQ:at,qq=" + data.user_id + "]");
-
         bot.sendGroupMsg(data.group_id, tips);
 
       }
@@ -147,13 +145,19 @@ jsonfile.readFile("./config.json", function (err, config) {
       let cmd = "INSERT INTO VIOLATION_RECORDS VALUES ($USER_ID, $GROUP_ID, $TYPE, $REMARK, $TIME);";
 
       if (violationValueCount === 5) { // 禁言
+
         tips = config.tipsTemplate.banned_message_ban;
+
         if (config.function.banned_message_gag) bot.setGroupBan(data.group_id, data.user_id, 300);
+
       }
 
       else if (violationValueCount > 5) { // 踢出群组
+
         tips = config.tipsTemplate.banned_message_kick;
+
         if (config.function.banned_message_kick) bot.setGroupKick(data.group_id, data.user_id);
+
       }
 
       if (config.function.banned_message_withdraw) bot.deleteMsg(data.message_id);
@@ -164,8 +168,7 @@ jsonfile.readFile("./config.json", function (err, config) {
       violationData.run(cmd, {
         $USER_ID: data.user_id, $GROUP_ID: data.group_id,
         $TYPE: violationValueCount > 5 ? "踢出" : "禁言",
-        $REMARK: data.raw_message,
-        $TIME: (new Date()).toLocaleString()
+        $REMARK: data.raw_message, $TIME: (new Date()).toLocaleString()
       });
 
     });
@@ -185,9 +188,13 @@ jsonfile.readFile("./config.json", function (err, config) {
     let cmd = msg[msg.length - 1].data.text.split(" ").filter(c => c != "");
 
     switch (cmd[0]) {
+
       case "清理群员":
-        if (isOwnerOrAdmin(data)) clearGroup(data, cmd[1]); break;
+        if (isOwnerOrAdmin(data)) clearGroup(data, cmd[1]);
+        break;
+
       default: questionAnswer(data); break;
+
     }
 
   }
@@ -289,7 +296,6 @@ jsonfile.readFile("./config.json", function (err, config) {
     violationData.get(cmd, function (err, row) {
 
       let index = Math.floor(Math.random() * config.listen.length);
-
       bot.sendGroupMsg(config.listen[index], row.TEXT);
 
     });
