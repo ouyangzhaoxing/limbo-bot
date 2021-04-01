@@ -25,6 +25,7 @@ jsonfile.readFile("./config.json", function (err, config) {
     if (!checkListen(data.group_id)) return;
 
     joinTips(data);
+    autoKick(data);
     checkNickname(data);
 
   });
@@ -77,6 +78,13 @@ jsonfile.readFile("./config.json", function (err, config) {
     let tips = config.tipsTemplate.join.replace("[nickname]", "[CQ:at,qq=" + data.user_id + "]");
     bot.sendGroupMsg(data.group_id, tips);
 
+  }
+
+  /** 群满自动踢人 */
+  function autoKick(data) {
+    bot.getGroupInfo(data.group_id).then(function (value) {
+      if (value.data.member_count >= value.data.max_member_count - 5) clearGroupMember(data, 10);
+    });
   }
 
   /** 检查昵称是否违规 */
@@ -196,8 +204,8 @@ jsonfile.readFile("./config.json", function (err, config) {
 
     switch (cmd[0]) {
 
-      case "清理群员":
-        if (isOwnerOrAdmin(data)) clearGroup(data, cmd[1]);
+      case "打扫卫生":
+        if (data.sender.role === "owner") clearGroupMember(data, parseInt(cmd[1]));
         break;
 
       default: questionAnswer(data); break;
@@ -212,7 +220,48 @@ jsonfile.readFile("./config.json", function (err, config) {
   }
 
   /** 清理群员 */
-  function clearGroup(data, num) {
+  function clearGroupMember(data, num) {
+
+    let lowValueMember = [];
+
+    if (num > 100) num = 100;
+
+    let currentTime = Math.round(new Date() / 1000);
+
+    bot.getGroupMemberList(data.group_id).then(function (value) {
+
+      value.data.forEach((v, k, map) => {
+
+        if (v.level <= 3) {
+
+          // 群员价值
+          let mv = ((new Date(v.last_sent_time)) / (60 * 60 * 24)) - (currentTime / (60 * 60 * 24)) + (v.level * 4 - 2);
+
+          lowValueMember.push({ user_id: v.user_id, mv: mv });
+
+        }
+
+      });
+
+      lowValueMember.sort((a, b) => { return a.mv - b.mv; }); // 群员价值排序
+
+      let kickCount = 0, kickFlag = true, cmd = "SELECT * FROM AUTO_KICK_WHITELIST WHERE USER_ID = $USER_ID LIMIT 1;";
+
+      for (let index = 0; index <= num && index < lowValueMember.length; index++) {
+
+        violationData.get(cmd, { $USER_ID: lowValueMember[index].user_id }, function (err, row) {
+
+          kickFlag = true;
+
+          if (row !== undefined && row.EXPIRATION > currentTime) kickFlag = false;
+
+          if (kickFlag) { bot.setGroupKick(data.group_id, lowValueMember[index].user_id); ++kickCount; }
+
+        });
+
+      }
+
+    });
 
   }
 
