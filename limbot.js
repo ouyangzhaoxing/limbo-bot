@@ -1,12 +1,15 @@
 const fs = require('fs');
 const jsonfile = require('jsonfile');
 const sqlite3 = require('sqlite3').verbose();
+const linkify = require('linkify-it')();
 const { createClient } = require("oicq");
 const { setInterval } = require('timers');
 
 jsonfile.readFile("./config.json", function (err, config) {
 
   if (err) { console.error(err); return; }
+
+  linkify.tlds(require('tlds'));
 
   var violationData = new sqlite3.Database("./data.sqlite3"); // 打开数据库（违规数据）
 
@@ -49,6 +52,7 @@ jsonfile.readFile("./config.json", function (err, config) {
 
     if (data.sender.level >= config.msg_no_check_level) return; // 忽略检查等级较高的成员
 
+    linkWithdraw(data);
     checkMessage(data);
 
   });
@@ -324,6 +328,25 @@ jsonfile.readFile("./config.json", function (err, config) {
 
     bot.setGroupKick(data.group_id, data.message[data.message.length - 2].data.qq, true);
     bot.sendGroupMsg(data.group_id, config.tipsTemplate.answer_swordbearer);
+
+  }
+
+  /** 链接撤回 */
+  function linkWithdraw(data) {
+
+    if (!config.function.link_withdraw && !linkify.pretest(data.raw_message)) return;
+
+    let cmd = "SELECT * FROM LINK_WHITELIST WHERE INSTR($MSG, VALUE) > 0 LIMIT 1;";
+
+    violationData.get(cmd, { $MSG: data.raw_message }, function (err, row) {
+
+      if (row !== undefined) return;
+
+      bot.deleteMsg(data.message_id);
+
+      bot.sendGroupMsg(data.group_id, config.tipsTemplate.link_withdraw);
+
+    });
 
   }
 

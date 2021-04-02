@@ -10,7 +10,9 @@
   "license": "MIT",
   "dependencies": {
     "jsonfile": "^6.1.0",
+    "linkify-it": "^3.0.2",
     "oicq": "^1.14.1",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "tlds": "^1.219.0"
   }
 }

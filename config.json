@@ -18,6 +18,7 @@
         "banned_message_gag": true,
         "banned_message_kick": true,
         "question_answer": true,
+        "link_withdraw": true,
         "long_code_withdraw": false
     },
     "tipsTemplate": {
@@ -27,6 +28,7 @@
         "banned_message_ban": "[nickname] 你的消息违规，已禁言处理。",
         "banned_message_kick": "[nickname] 你的消息严重违规，已被移出群聊。",
         "no_answer": "没事请不要打扰我。",
+        "link_withdraw": "你的链接不在白名单内，已被撤回。",
         "answer_swordbearer": "好的执剑者，已完成你的指令。"
     }
 }
