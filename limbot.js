@@ -48,6 +48,8 @@ jsonfile.readFile("./config.json", function (err, _config) {
 
     if (data.sender.level >= config.msg_no_check_level) return; // 忽略检查等级较高的成员
 
+    if (data.raw_message.length <= config.msg_no_check_length) return; // 忽略检查低长度消息
+
     if (longCodeWithdraw(data)) return;
 
     if (linkWithdraw(data)) return;

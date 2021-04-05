@@ -4,6 +4,7 @@
     "password": "",
     "listen": [],
     "cache_msg_max": 60,
+    "msg_no_check_length": 15,
     "msg_no_check_level": 6,
     "no_kick_level": 3,
     "auto_talk_interval": 1200000,
